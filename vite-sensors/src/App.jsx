@@ -1,5 +1,7 @@
-import './App.css'
+import './App.css';
+import Team from './Team';
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 function Map() {
   const { isLoaded } = useLoadScript({
@@ -9,19 +11,25 @@ function Map() {
 
   if (!isLoaded) return (<div>Loading...</div>);
   return (
-      <GoogleMap zoom={13} center={{lat: 51.1410139, lng: 71.4409839}} mapContainerClassName="map"></GoogleMap>
+    <GoogleMap zoom={13} center={{ lat: 51.1410139, lng: 71.4409839 }} mapContainerClassName="map"></GoogleMap>
+  )
+}
+
+export function Navbar() {
+  return (
+    <navbar>
+      <ul>
+        <li><a href="" target="_blank">Главная страница</a></li>
+        <li><a href="" target="_blank">Войти/Зарегистрироваться</a></li>
+      </ul>
+    </navbar>
   )
 }
 
 function App() {
   return (
     <div className="App">
-      <navbar>
-        <ul>
-          <li><a href="" target="_blank">Главная страница</a></li>
-          <li><a href="" target="_blank">Войти/Зарегистрироваться</a></li>
-        </ul>
-      </navbar>
+      <Navbar />
       <main>
         <section>
           <div className="map">
@@ -42,9 +50,6 @@ function App() {
           </div>
         </section>
       </main>
-      <footer>
-        2023
-      </footer>
     </div>
   )
 }

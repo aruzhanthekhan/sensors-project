@@ -1,4 +1,4 @@
-navbar ul {
+ul {
   display: flex;
   list-style-type: none;
   justify-content: space-evenly;
@@ -13,14 +13,14 @@ a:hover, a:active {
   text-decoration: underline;
   color: black;
 }
-
+/*
 footer {
   border-top: 3px solid grey;
   text-align: center;
   margin-top: 10px;
   padding: 10px;
 }
-
+*/
 .map {
   width: 80vw;
   height: 80vh;
