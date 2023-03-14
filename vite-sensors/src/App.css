@@ -40,3 +40,10 @@ footer {
   flex-basis: 70%;
 }
 
+.button-team {
+    background-color: rgb(167, 167, 167);
+    padding: 10px 10px;
+    text-decoration: none;
+    border-radius: 7px;
+    box-shadow: 2px black;
+}
