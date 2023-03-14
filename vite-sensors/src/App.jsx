@@ -1,11 +1,15 @@
-import { useState } from 'react'
 import './App.css'
-import './Team'
+import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 
-const mapSection = function() {
+function Map() {
+  const { isLoaded } = useLoadScript({
+    //googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
+    googleMapsApiKey: "AIzaSyBRhURGMnFFB5ziAB8a5e68qyPuigsBnhk",
+  });
+
+  if (!isLoaded) return (<div>Loading...</div>);
   return (
-    <div className='map-section' id="map">
-    </div>
+      <GoogleMap zoom={13} center={{lat: 51.1410139, lng: 71.4409839}} mapContainerClassName="map"></GoogleMap>
   )
 }
 
@@ -21,7 +25,7 @@ function App() {
       <main>
         <section>
           <div className="map">
-            Тут будет карта
+            <Map />
           </div>
         </section>
         <section className='general-info'>

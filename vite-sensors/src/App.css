@@ -4,6 +4,16 @@ navbar ul {
   justify-content: space-evenly;
 }
 
+a:link, a:visited {
+  text-decoration: none;
+  color: rgb(49, 49, 49);
+}
+
+a:hover, a:active {
+  text-decoration: underline;
+  color: black;
+}
+
 footer {
   border-top: 3px solid grey;
   text-align: center;
@@ -13,8 +23,8 @@ footer {
 
 .map {
   width: 80vw;
-  height: 200px;
-  background-color:rgb(167, 167, 255);
+  height: 80vh;
+  background-color:rgb(192, 192, 192);
   margin: 20px auto;
 }
 
