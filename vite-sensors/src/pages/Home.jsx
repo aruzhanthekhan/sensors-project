@@ -34,6 +34,8 @@ export function Home() {
           <div className='team-section'>
             <h1>Команда</h1>
             <Link to="/team" target="_blank" className="button-team">Узнать больше о команде</Link>
+            <br />
+            <Link to="/indicators" target="_blank" className="button-team">Показатели</Link> 
           </div>
         </section>
       </main>

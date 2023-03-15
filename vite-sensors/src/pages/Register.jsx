@@ -1,18 +1,24 @@
-import './Register.css'
+import '../App.css'
+import { Link } from 'react-router-dom'
+
 export function Register() {
     return (
-    <div>
-        <h1>Зарегистрироваться</h1>
-        <p>Строки отмеченные * обязательны для заполнения</p>
-        <form>
-            <label for="last-name">Фамилия *<input type="text" id="last-name" name="last-name" required /></label>
-            <label for="first-name">Имя *<input type="text" id="first-name" name="first-name" required /></label>
-            <label for="fathers-name">Отчество<input type="text" id="fathers-name" name="fathers-name"></input></label>
-            <label for="date-of-birth">Дата рождения *<input type="date" id="date-of-birth" name="date-of-birth" required></input></label>
-            <label for="email">Адрес электронной почты *<input type="email" id="email" name="email" required></input></label>
-            <label for="password">Придумайте пароль *<input type="password" id="password" name="password" required></input></label>
-        </form>
-        <button>Зарегистрироваться</button>
-    </div>
-)
+        <div>
+            <div className="register-container">
+                <h1>Зарегистрироваться</h1>
+                <p>Строки отмеченные * обязательны для заполнения</p>
+                <form>
+                    <label htmlFor="last-name">Фамилия *</label><input type="text" id="last-name" name="last-name" required />
+                    <label htmlFor="first-name">Имя *</label><input type="text" id="first-name" name="first-name" required />
+                    <label htmlFor="fathers-name">Отчество</label><input type="text" id="fathers-name" name="fathers-name" />
+                    <label htmlFor="email">Адрес электронной почты *</label><input type="email" id="email" name="email" required />
+                    <label htmlFor="password">Придумайте пароль *</label><input type="password" id="password" name="password" required />
+                    <button type="submit" className='registerbtn'>Зарегистрироваться</button>
+                </form>
+            </div>
+            <div className="alternative-container">
+                <p>Уже есть аккаунт? <Link to="/login">Нажмите сюда, чтобы войти</Link>.</p>
+            </div>
+        </div>
+    )
 }

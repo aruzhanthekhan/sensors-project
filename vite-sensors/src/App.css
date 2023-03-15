@@ -1,26 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
 ul {
   display: flex;
   list-style-type: none;
   justify-content: space-evenly;
 }
 
-a:link, a:visited {
+.navigation-bar {
+  box-shadow: 0 5px 5px rgb(173, 173, 173);
+  padding: 7px 0;
+}
+
+.navigation-bar a:link, .navigation-bar a:visited {
   text-decoration: none;
   color: rgb(49, 49, 49);
 }
 
-a:hover, a:active {
+.navigation-bar a:hover, .navigation-bar a:active {
   text-decoration: underline;
   color: black;
 }
-/*
-footer {
-  border-top: 3px solid grey;
-  text-align: center;
-  margin-top: 10px;
+
+.indicator-container {
+  width: 50vw;
+  margin: 70px auto;
   padding: 10px;
 }
-*/
+
+.indicator-info {
+  display: flex;
+  justify-content: space-between;
+}
+
 .map {
   width: 80vw;
   height: 80vh;
@@ -41,9 +54,64 @@ footer {
 }
 
 .button-team {
-    background-color: rgb(167, 167, 167);
-    padding: 10px 10px;
-    text-decoration: none;
-    border-radius: 7px;
-    box-shadow: 2px black;
+  background-color: rgb(167, 167, 167);
+  padding: 10px 10px;
+  text-decoration: none;
+  border-radius: 7px;
+  box-shadow: 2px black;
+  color: black;
+  display: block;
+}
+
+.button-team:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.alternative-container a:link, .alternative-container a:visited {
+  color: rgb(74, 74, 255);
+}
+
+.register-container {
+  width: 50vw;
+  margin: 10px auto;
+}
+
+.register-container h1 {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.register-container p {
+  text-align: center;
+  margin: 30px 0;
+}
+
+input[type=text], input[type=password], input[type=email] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.registerbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 10px 10px;
+  margin: 8px auto;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+  font-weight: bold;
+}
+
+.alternative-container{
+  text-align: center;
 }
