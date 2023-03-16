@@ -51,12 +51,13 @@ class User(db.Model, BaseClass):
             setattr(self, key, kwargs.get(key))
 
     
-class Flat(db.Model, BaseClass):
-    __tablename__ = "flats"
+class Building(db.Model, BaseClass):
+    __tablename__ = "buildings"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     owner = db.Column(db.String(255), nullable=False, index=True)
     address = db.Column(db.String(255), nullable=False)
+    geolocation = db.Column(db.Stirng(255), nullable=False)
     hotWaterPressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
     coldWaterPressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
     hotWaterConsumption = db.Column(db.Float, nullable=False, default=0.0, index=True)
