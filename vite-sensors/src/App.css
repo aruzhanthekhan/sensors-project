@@ -2,6 +2,13 @@
   box-sizing: border-box;
 }
 
+.leaflet-container {
+  height: 80vh;
+  height: 80vh;
+  background-color:rgb(192, 192, 192);
+  margin: 20px auto;
+}
+
 ul {
   display: flex;
   list-style-type: none;
@@ -32,13 +39,6 @@ ul {
 .indicator-info {
   display: flex;
   justify-content: space-between;
-}
-
-.map {
-  width: 80vw;
-  height: 80vh;
-  background-color:rgb(192, 192, 192);
-  margin: 20px auto;
 }
 
 .general-info {

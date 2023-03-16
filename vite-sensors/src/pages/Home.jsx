@@ -1,7 +1,12 @@
-import '../App.css';
-import { Link } from 'react-router-dom';
-import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
+import '../App.css'
+import 'leaflet/dist/leaflet.css'
+import markericon from '/marker-icon.png'
 
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { Icon } from 'leaflet'
+import { Link } from 'react-router-dom'
+//import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api"
+/*
 function Map() {
   const { isLoaded } = useLoadScript({
     //googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
@@ -13,15 +18,45 @@ function Map() {
     <GoogleMap zoom={13} center={{ lat: 51.1410139, lng: 71.4409839 }} mapContainerClassName="map"></GoogleMap>
   )
 }
+*/
+function Map() {
+  const markers = [
+    {
+      geocode: [51.1611436, 71.4592416],
+      popup: 'улица Ахмета Жубанова, 10'
+    },
+    {
+      geocode: [51.1117596, 71.4261293],
+      popup: 'улица Туркестан, 8/1'
+    }
+  ]
+
+  const customIcon = new Icon({
+    iconUrl: markericon,
+    iconSize: [38, 38]
+  })
+
+  return (
+  <MapContainer center={{ lat: 51.1410139, lng: 71.4409839 }} zoom={13}>
+    <TileLayer 
+    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    url='https://tile.openstreetmap.org/{z}/{x}/{y}.png' />
+    
+    {markers.map((marker) => (
+      <Marker position={marker.geocode} icon={customIcon}>
+        <Popup>{marker.popup}</Popup>
+      </Marker>
+     ))
+    }
+  </MapContainer>
+)}
 
 export function Home() {
   return (
     <div className="App">
       <main>
         <section>
-          <div className="map">
             <Map />
-          </div>
         </section>
         <section className='general-info'>
           <div className='about-section'>
