@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export function PersonalPage() {
     return (
-        <div>
+        <div className="centered-header">
             <h1>Личный кабинет</h1>
         </div>
     )
