@@ -32,7 +32,9 @@ function Map() {
         url='https://tile.openstreetmap.org/{z}/{x}/{y}.png' />
       {markers.map((marker) => (
         <Marker position={marker.geocode} icon={customIcon} key={marker.index}>
-          <Popup>{marker.popup}</Popup>
+          <Popup>
+            <Link to="/indicators">{marker.popup}</Link>
+          </Popup>
         </Marker>
       ))}
     </MapContainer>

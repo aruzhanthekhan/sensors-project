@@ -3,7 +3,7 @@ export function Team() {
     return (
         <div>
             <main>
-                <h1></h1>
+                <h1 className="centered-header">Команда</h1>
                 <div className='team-container'>
                     <div className='person-container'>
                         <img src="/person-1.jpg" className='team-member-picture'></img>

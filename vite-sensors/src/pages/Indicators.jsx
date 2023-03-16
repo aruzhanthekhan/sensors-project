@@ -12,8 +12,8 @@ export function Indicators() {
                 <p className='indicator-info'>Адрес: <span>sample text</span></p>
                 <p className='indicator-info'>Подъезд: <span>sample text</span></p>
                 <p className='indicator-info'>Номер ОСИ: <span>sample text</span></p>
-                <p className='indicator-info'>Имя: <span>sample text</span></p>
-                <p className='indicator-info'>Фамилия: <span>sample text</span></p>
+                <p className='indicator-info'>Имя председателя ОСИ: <span>sample text</span></p>
+                <p className='indicator-info'>Фамилия председателя ОСИ: <span>sample text</span></p>
             </div>
         </div>
     )
