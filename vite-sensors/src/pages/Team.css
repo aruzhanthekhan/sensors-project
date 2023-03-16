@@ -1,9 +1,0 @@
-.team-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.person-container {
-    display: flex;
-    flex-direction: row;
-}
