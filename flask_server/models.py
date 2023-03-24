@@ -35,7 +35,7 @@ class BaseClass(object):
 class User(db.Model, BaseClass):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(255), nullable=False)
     lastname = db.Column(db.String(255), nullable=False)
     patronymic = db.Column(db.String(255), nullable=False, default="Don't have")
@@ -43,18 +43,18 @@ class User(db.Model, BaseClass):
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255), nullable=False)
     dateOfCreate = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    dateOfLastUpdate = db.Column(db.DateTime(timezone=True), onupdate=func.now)
+    dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now)
 
     admins = db.relationship('Admin', backref='admins')
     chairmen = db.relationship('Chairman', backref='chairmen')
 
     def __init__(self, **kwargs):
-        keys = ['id', 'firstname', 'lastname', 'patronymic', 'phone', 'email', 'password', 'dateOfCreate', 'dateOfLastUpdate']
+        keys = ['id', 'firstname', 'lastname', 'patronymic', 'phone', 'email', 'password']
         for key in keys:
             setattr(self, key, kwargs.get(key))
 
 
-chairmenBuildings = db.Table('chairmenBuildings',
+chairmenBuildings = db.Table('ChairmenBuildings',
     db.Column('chairmanId', db.Integer, db.ForeignKey('chairmen.id')),
     db.Column('buildingId', db.Integer, db.ForeignKey('building.id'))
 )
@@ -63,7 +63,7 @@ chairmenBuildings = db.Table('chairmenBuildings',
 class Admin(db.Model, BaseClass):
     __tablename__ = "admins"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     userId = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
     buildings = db.relationship('Building', backref='buildings')
@@ -78,7 +78,7 @@ class Admin(db.Model, BaseClass):
 class Chairman(db.Model, BaseClass):
     __tablename__ = "chairmen"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     userId = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
     editors = db.relationship('Building', secondary='chairmenBuildings', backref='editors')
@@ -93,10 +93,10 @@ class Chairman(db.Model, BaseClass):
 class Building(db.Model, BaseClass):
     __tablename__ = "buildings"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(255), unique=True, nullable=False)
-    latitude = db.Column(db.Decimal(8, 6), unique=True, nullable=False)
-    longitude = db.Column(db.Decimal(9, 6), unique=True, nullable=False)
+    latitude = db.Column(db.Numeric(precision=7, asdecimal=False, decimal_return_scale=None), unique=True, nullable=False)
+    longitude = db.Column(db.Numeric(precision=7, asdecimal=False, decimal_return_scale=None), unique=True, nullable=False)
     hotWaterPressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
     coldWaterPressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
     hotWaterConsumption = db.Column(db.Float, nullable=False, default=0.0, index=True)
@@ -108,12 +108,12 @@ class Building(db.Model, BaseClass):
     createdBy = db.Column(db.Integer, db.ForeignKey('admins.id'), nullable=False)
     redactedBy = db.Column(db.Integer, db.ForeignKey('chairmen.id'), nullable=False)
     dateOfCreate = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    dateOfLastUpdate = db.Column(db.DataTime(timezone=True), onupdate=func.now())
+    dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
 
 
     def __init__(self, **kwargs):
-        keys = ['id', 'owner', 'address', 'hotWaterPressure', 'coldWaterPressure',
+        keys = ['id', 'address', 'latitude', 'longitude', 'hotWaterPressure', 'coldWaterPressure',
                 'hotWaterConsumption', 'coldWaterConsumption', 'directFlowTemperature',
                 'returnFlowTemperature', 'inputVoltage', 'inputCurrentStrength']
         
