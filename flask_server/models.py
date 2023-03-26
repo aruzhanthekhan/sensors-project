@@ -56,7 +56,7 @@ class User(db.Model, BaseClass):
 
 chairmenBuildings = db.Table('ChairmenBuildings',
     db.Column('chairmanId', db.Integer, db.ForeignKey('chairmen.id')),
-    db.Column('buildingId', db.Integer, db.ForeignKey('building.id'))
+    db.Column('buildingId', db.Integer, db.ForeignKey('buildings.id'))
 )
 
 
