@@ -1,16 +1,18 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
-from views import home_page
+from views import home_page, auth
+from models import db
+from views import bcrypt, server_session
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-db = SQLAlchemy(app)
-
-
-from models import User, Admin, Chairman, Building, chairmenBuildings
+# db = SQLAlchemy(app)
+db.init_app(app)
+bcrypt.init_app(app)
+server_session.init_app(app)
 
 
 with app.app_context():
@@ -19,6 +21,7 @@ with app.app_context():
 
 
 app.register_blueprint(home_page)
+app.register_blueprint(auth)
 
 
 if __name__ == '__main__':

@@ -1,27 +1,27 @@
 from sqlalchemy.sql import func
 from sqlalchemy.inspection import inspect
+from flask_sqlalchemy import SQLAlchemy
 
-from app import db
+
+db = SQLAlchemy()
+
 
 class BaseClass(object):
     """
-    Constains common functions like save and delete
+    Contains common functions like save and delete
     """
     def save(self):
         db.session.add(self)
         db.session.commit()
-        return self.id
     
 
     def update(self):
         db.session.commit()
-        return self.id
     
 
     def delete(self):
         db.session.delete()
         db.commit()
-        return self.id
     
 
     def serialize(self):
@@ -49,9 +49,14 @@ class User(db.Model, BaseClass):
     chairmen = db.relationship('Chairman', backref='chairmen')
 
     def __init__(self, **kwargs):
-        keys = ['id', 'firstname', 'lastname', 'patronymic', 'phone', 'email', 'password']
+        keys = ['firstname', 'lastname', 'patronymic', 'phone', 'email', 'password']
         for key in keys:
             setattr(self, key, kwargs.get(key))
+
+    
+    @staticmethod
+    def get(**kwargs):
+        return User.query.filter_by(**kwargs).first()
 
 
 chairmenBuildings = db.Table('ChairmenBuildings',
@@ -119,6 +124,11 @@ class Building(db.Model, BaseClass):
         
         for key in keys:
             setattr(self, key, kwargs.get(key))
+
+    
+    @staticmethod
+    def get_all():
+        return Building.query.filter_by().all()
 
 
 # class ChairmenBuildings(db.Model, BaseClass):
