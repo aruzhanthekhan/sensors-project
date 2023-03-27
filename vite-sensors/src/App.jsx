@@ -5,6 +5,7 @@ import { Register } from "./pages/Register"
 import { Team } from "./pages/Team"
 import { Login } from "./pages/Login"
 import { Indicators } from './pages/Indicators'
+import { PersonalPage } from './pages/PersonalPage'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/team" element={<Team />} />
         <Route path="/indicators" element={<Indicators />} />
+        <Route path="/personalpage" element={<PersonalPage />} />
       </Routes>
     </div>
   )
