@@ -1,9 +1,11 @@
 from sqlalchemy.sql import func
 from sqlalchemy.inspection import inspect
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 class BaseClass(object):
@@ -25,7 +27,7 @@ class BaseClass(object):
     
 
     def serialize(self):
-        return {c: getattr(self, c) for c in inspect(self).attrs.key()}
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
     
 
     def serialize_list(self, list):
@@ -59,7 +61,7 @@ class User(db.Model, BaseClass):
         return User.query.filter_by(**kwargs).first()
 
 
-chairmenBuildings = db.Table('ChairmenBuildings',
+chairmenBuildings = db.Table('chairmenbuildings',
     db.Column('chairmanId', db.Integer, db.ForeignKey('chairmen.id')),
     db.Column('buildingId', db.Integer, db.ForeignKey('buildings.id'))
 )
@@ -86,7 +88,7 @@ class Chairman(db.Model, BaseClass):
     id = db.Column(db.Integer, primary_key=True)
     userId = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
-    editors = db.relationship('Building', secondary='chairmenBuildings', backref='editors')
+    editors = db.relationship('Building', secondary='chairmenbuildings', backref='editors')
 
     def __init__(self, **kwargs):
         keys = ['userId']

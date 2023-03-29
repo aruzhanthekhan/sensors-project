@@ -45,15 +45,17 @@ def sign_up():
     email = request.form.get('email')
     password = request.form.get('password')
 
+
     userExist = User.get(email=email)
     if userExist is not None:
         return dict(status=409, comment="User with this email already exist")
-    
+        
     userExist = User.get(phone=phone)
     if userExist is not None:
         return dict(status=409, comment="User with this phone number already exist")
-    
+        
     hashedPassword = bcrypt.generate_password_hash(password)
+
 
     user = User(firstname=firstname, lastname=lastname, patronymic=patronymic, phone=phone, email=email, password=hashedPassword)
     user.save()
@@ -61,6 +63,7 @@ def sign_up():
     session['email'] = email
 
     return user.serialize()
+    
 
 
 @auth.route('/logout', methods=['POST'])
