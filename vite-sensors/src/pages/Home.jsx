@@ -6,7 +6,6 @@ import { useState, useEffect } from "react"
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 
 function Map() {
   const markers = [
@@ -21,6 +20,8 @@ function Map() {
       popup: 'улица Туркестан, 8/1'
     }
   ]
+
+  //const [markers, setMarkers] = useState([]);
 
   const customIcon = new Icon({
     iconUrl: markericon,
@@ -45,24 +46,13 @@ function Map() {
 
 export function Home() {
 
-  const [profileData, setProfileData] = useState(null)
+  const [productData, setProductData] = useState(null)
 
-  function getData() {
-    axios({
-      method: "GET",
-      url:"http://localhost:5000/",
-    })
-    .then((response) => {
-      const res =response.data
-      setProfileData(({
-        profile_name: res.message}))
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.headers)
-        }
-    })}
+  useEffect(() => {
+    fetch('https://dummyjson.com/products/1')
+      .then(res => res.json())
+      .then(data => setProductData(data))
+  }, []);
 
   return (
     <div className="App">
@@ -73,9 +63,9 @@ export function Home() {
         <section className='general-info'>
           <div className='about-section'>
             <h1>О проекте</h1>
-            <p>To get your profile details: </p><button onClick={getData}>Click me</button>
-            {profileData && <div>
-              <p>Profile name: {profileData.profile_name}</p>
+            {productData && <div>
+              <p>Product name: {productData.title}</p>
+              <p>Product description: {productData.description}</p>
             </div>}
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus non rutrum justo, at tincidunt libero. Duis porta elit ac ornare commodo. Nunc et risus a sapien condimentum vehicula non id ligula. Vivamus sollicitudin nibh eu tellus scelerisque tincidunt. Nam vestibulum enim ac tempus volutpat.</p>
             <p>Phasellus blandit, purus nec pretium sodales, elit risus rutrum metus, vitae tempor ipsum eros vitae justo. Aenean feugiat ipsum ut nisi ultricies, id porttitor nibh luctus. Nunc iaculis varius sodales. Suspendisse id porta tellus. Integer efficitur faucibus risus, in vestibulum dolor.</p>
