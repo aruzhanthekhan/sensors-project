@@ -2,6 +2,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.inspection import inspect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import UserMixin
 
 
 db = SQLAlchemy()
@@ -34,7 +35,7 @@ class BaseClass(object):
         return [m.serialize() for m in list]
     
 
-class User(db.Model, BaseClass):
+class User(db.Model, BaseClass, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
