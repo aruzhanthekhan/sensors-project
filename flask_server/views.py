@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, request, session
 from flask_bcrypt import Bcrypt
 from flask_session import Session
@@ -19,7 +20,12 @@ building = Blueprint('build', __name__)
 
 @home_page.route('/', methods=['GET'])
 def home():
-    return Building.get_all()
+    return json.dumps(Building.get_all())
+
+
+@login_manager.user_loader
+def load_user(user_id: int):
+    return User.get(id=user_id)
 
 
 @auth.route('/login', methods=['POST'])
@@ -85,13 +91,13 @@ def show_profile():
     pass
 
 
-@building.route('/addBuilding', method=['POST'])
+@building.route('/addBuilding', methods=['POST'])
 @login_required
 def add_building():
     pass
 
 
-@building.route('/updateBuildingParam', method=['POST'])
+@building.route('/updateBuildingParam', methods=['POST'])
 @login_required
 def update_building_parameter():
     pass

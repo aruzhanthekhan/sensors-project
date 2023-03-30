@@ -83,6 +83,14 @@ class Admin(db.Model, BaseClass):
             setattr(self, key, kwargs.get(key))
 
 
+    @staticmethod
+    def is_admin(user_id: int):
+        if (Admin.query.filter_by(userId=user_id).first() is not None):
+            return True
+        
+        return False
+
+
 class Chairman(db.Model, BaseClass):
     __tablename__ = "chairmen"
 
@@ -96,6 +104,14 @@ class Chairman(db.Model, BaseClass):
 
         for key in keys:
             setattr(self, key, kwargs.get(key))
+
+    
+    @staticmethod
+    def is_chairman(user_id: int):
+        if(Chairman.query.filter_by(userId=user_id).first() is not None):
+            return True
+        
+        return False
 
     
 class Building(db.Model, BaseClass):
