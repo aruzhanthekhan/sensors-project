@@ -1,3 +1,4 @@
+import enum
 from sqlalchemy.sql import func
 from sqlalchemy.inspection import inspect
 from flask_sqlalchemy import SQLAlchemy
@@ -7,6 +8,12 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 migrate = Migrate()
+
+
+class Roles(int, enum.Enum):
+    User = 0
+    Admin = 1
+    Chairman = 2
 
 
 class BaseClass(object):
@@ -45,11 +52,10 @@ class User(db.Model, BaseClass, UserMixin):
     phone = db.Column(db.String(255), unique=True, nullable=True, index=True)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.Enum(Roles), nullable=False, default=Roles.User)
     dateOfCreate = db.Column(db.DateTime(timezone=True), server_default=func.now())
     dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now)
 
-    admins = db.relationship('Admin', backref='admins')
-    chairmen = db.relationship('Chairman', backref='chairmen')
 
     def __init__(self, **kwargs):
         keys = ['firstname', 'lastname', 'patronymic', 'phone', 'email', 'password']
@@ -60,58 +66,29 @@ class User(db.Model, BaseClass, UserMixin):
     @staticmethod
     def get(**kwargs):
         return User.query.filter_by(**kwargs).first()
-
-
-chairmenBuildings = db.Table('chairmenbuildings',
-    db.Column('chairmanId', db.Integer, db.ForeignKey('chairmen.id')),
-    db.Column('buildingId', db.Integer, db.ForeignKey('buildings.id'))
-)
-
-
-class Admin(db.Model, BaseClass):
-    __tablename__ = "admins"
-
-    id = db.Column(db.Integer, primary_key=True)
-    userId = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
-
-    buildings = db.relationship('Building', backref='buildings')
-
-    def __init__(self, **kwargs):
-        keys = ['userId']
-
-        for key in keys:
-            setattr(self, key, kwargs.get(key))
-
-
-    @staticmethod
-    def is_admin(user_id: int):
-        if (Admin.query.filter_by(userId=user_id).first() is not None):
-            return True
-        
-        return False
-
-
-class Chairman(db.Model, BaseClass):
-    __tablename__ = "chairmen"
-
-    id = db.Column(db.Integer, primary_key=True)
-    userId = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
-
-    editors = db.relationship('Building', secondary='chairmenbuildings', backref='editors')
-
-    def __init__(self, **kwargs):
-        keys = ['userId']
-
-        for key in keys:
-            setattr(self, key, kwargs.get(key))
-
     
+
     @staticmethod
-    def is_chairman(user_id: int):
-        if(Chairman.query.filter_by(userId=user_id).first() is not None):
+    def is_admin(user_id: int) -> bool:
+        user = User.get(id=user_id)
+        if user.role == 1:
             return True
         
         return False
+    
+
+    @staticmethod
+    def is_chairman(user_id: int) -> bool:
+        user = User.get(id=user_id)
+        if user.role == 2:
+            return True
+        
+        return False
+    
+
+    @staticmethod
+    def get_all():
+        return User.query.filter_by().all()
 
     
 class Building(db.Model, BaseClass):
@@ -129,11 +106,10 @@ class Building(db.Model, BaseClass):
     returnFlowTemperature = db.Column(db.Float, nullable=False, default=0.0, index=True)
     inputVoltage = db.Column(db.Float, nullable=False, default=0.0, index=True)
     inputCurrentStrength = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    createdBy = db.Column(db.Integer, db.ForeignKey('admins.id'), nullable=False)
-    redactedBy = db.Column(db.Integer, db.ForeignKey('chairmen.id'), nullable=False)
+    createdBy = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    redactedBy = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     dateOfCreate = db.Column(db.DateTime(timezone=True), server_default=func.now())
     dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now())
-
 
 
     def __init__(self, **kwargs):
@@ -154,6 +130,57 @@ class Building(db.Model, BaseClass):
     def get_all():
         return Building.query.filter_by().all()
 
+
+# chairmenBuildings = db.Table('chairmenbuildings',
+#     db.Column('chairmanId', db.Integer, db.ForeignKey('chairmen.id')),
+#     db.Column('buildingId', db.Integer, db.ForeignKey('buildings.id'))
+# )
+
+
+# class Admin(db.Model, BaseClass):
+#     __tablename__ = "admins"
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     userId = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+
+#     buildings = db.relationship('Building', backref='buildings')
+
+#     def __init__(self, **kwargs):
+#         keys = ['userId']
+
+#         for key in keys:
+#             setattr(self, key, kwargs.get(key))
+
+
+#     @staticmethod
+#     def is_admin(user_id: int):
+#         if (Admin.query.filter_by(userId=user_id).first() is not None):
+#             return True
+        
+#         return False
+
+
+# class Chairman(db.Model, BaseClass):
+#     __tablename__ = "chairmen"
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     userId = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+
+#     editors = db.relationship('Building', secondary='chairmenbuildings', backref='editors')
+
+#     def __init__(self, **kwargs):
+#         keys = ['userId']
+
+#         for key in keys:
+#             setattr(self, key, kwargs.get(key))
+
+    
+#     @staticmethod
+#     def is_chairman(user_id: int):
+#         if(Chairman.query.filter_by(userId=user_id).first() is not None):
+#             return True
+        
+#         return False
 
 # class ChairmenBuildings(db.Model, BaseClass):
 #     __tablename__ = "usersflats"

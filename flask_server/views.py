@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_session import Session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from models import User, Admin, Chairman, Building
+from models import User, Building, Roles
 
 
 bcrypt = Bcrypt()
@@ -76,7 +76,6 @@ def sign_up():
     return dict(status=200, comment="User successfully created")
     
 
-
 @auth.route('/logout', methods=['POST'])
 @login_required
 def logout():
@@ -89,10 +88,53 @@ def logout():
 @login_required
 def show_profile():
     current_user_id = current_user.get_id()
-
     user = User.get(id = current_user_id)
 
     return user.serialize()
+
+
+@user.route('/addAdmin/<int:user_id>', methods=['POST'])
+@login_required
+def add_admin(user_id: int):
+    current_user_id = current_user.get_id()
+    current_user = User.get(id=current_user_id)
+
+    if not current_user.is_admin():
+        return dict(status=403, comment="User is not admin")
+    
+    user = User.get(id=user_id)
+    user.role = Roles.Admin
+    user.update()
+
+    return dict(status=200, comment="Admin successfully added")
+
+
+@user.route('/addChairman/<int:user_id>', methods=['POST'])
+@login_required
+def add_chairman(user_id: int):
+    current_user_id = current_user.get_id()
+    current_user = User.get(id=current_user_id)
+
+    if not current_user.is_admin():
+        return dict(status=403, comment="User is not admin")
+    
+    user = User.get(id=user_id)
+    user.role = Roles.Chairman
+    user.update()
+
+    return dict(status=200, comment="Chairman successfully added")
+
+
+@user.route('/dashboard', methods=['GET'])
+@login_required
+def show_all_users():
+    current_user_id = current_user.get_id()
+    current_user = User.get(id=current_user_id)
+
+    if not current_user.is_admin():
+        return dict(status=403, comment="User is not admin")
+    
+    return User.serialize_list()
 
 
 @building.route('/addBuilding', methods=['POST'])
@@ -100,10 +142,10 @@ def show_profile():
 def add_building():
     current_user_id = current_user.get_id()
 
-    if not Admin.is_admin(current_user_id):
+    if not User.is_admin(current_user_id):
         return dict(status=403, comment="User is not admin or chairman")
     
-    if not Chairman.is_chairman(current_user_id):
+    if not User.is_chairman(current_user_id):
         return dict(status=403, comment="User is not admin or chairman")
     
     address = request.form.get('address')
@@ -131,15 +173,15 @@ def add_building():
     return new_building.serialize()
 
 
-@building.route('/updateBuildingParam/<building_id: int>', methods=['POST'])
+@building.route('/updateBuildingParam/<int:building_id>', methods=['POST'])
 @login_required
 def update_building_parameter(building_id: int):
     current_user_id = current_user.get_id()
 
-    if not Admin.is_admin(current_user_id):
+    if not User.is_admin(current_user_id):
         return dict(status=403, comment="User is not admin or chairman")
     
-    if not Chairman.is_chairman(current_user_id):
+    if not User.is_chairman(current_user_id):
         return dict(status=403, comment="User is not admin or chairman")
     
     building = Building.get(id=building_id)
