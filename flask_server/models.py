@@ -144,6 +144,11 @@ class Building(db.Model, BaseClass):
         for key in keys:
             setattr(self, key, kwargs.get(key))
 
+
+    @staticmethod
+    def get(**kwargs):
+        return Building.query.filter_by(**kwargs).first()
+
     
     @staticmethod
     def get_all():

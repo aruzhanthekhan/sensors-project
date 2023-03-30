@@ -2,7 +2,7 @@ import json
 from flask import Blueprint, request, session
 from flask_bcrypt import Bcrypt
 from flask_session import Session
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 from models import User, Admin, Chairman, Building
 
@@ -88,16 +88,75 @@ def logout():
 @user.route('/profile', methods=['GET'])
 @login_required
 def show_profile():
-    pass
+    current_user_id = current_user.get_id()
+
+    user = User.get(id = current_user_id)
+
+    return user.serialize()
 
 
 @building.route('/addBuilding', methods=['POST'])
 @login_required
 def add_building():
-    pass
+    current_user_id = current_user.get_id()
+
+    if not Admin.is_admin(current_user_id):
+        return dict(status=403, comment="User is not admin or chairman")
+    
+    if not Chairman.is_chairman(current_user_id):
+        return dict(status=403, comment="User is not admin or chairman")
+    
+    address = request.form.get('address')
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
+    hotWaterPressure = request.form.get('hotWaterPressure')
+    coldWaterPressure = request.form.get('coldWaterPressure')
+    hotWaterConsumption = request.form.get('hotWaterConsumption')
+    coldWaterConsumption = request.form.get('coldWaterConsumption')
+    directFlowTemperature = request.form.get('directFlowTemperature')
+    returnFlowTemperature = request.form.get('returnFlowTemperature')
+    inputVoltage = request.form.get('inputVoltage')
+    inputCurrentStrength = request.form.get('inputCurrentStrength')
+    createdBy = current_user_id
+    redactedBy = current_user_id
+
+    new_building = Building(address=address, latitude=latitude, longitude=longitude, 
+                            hotWaterPressure=hotWaterPressure, coldWaterPressure=coldWaterPressure,
+                            hotWaterConsumption=hotWaterConsumption, coldWaterConsumption=coldWaterConsumption,
+                            directFlowTemperature=directFlowTemperature, returnFlowTemperature=returnFlowTemperature,
+                            inputVoltage=inputVoltage, inputCurrentStrength=inputCurrentStrength,
+                            createdBy=createdBy, redactedBy=redactedBy)
+    new_building.save()
+
+    return new_building.serialize()
 
 
-@building.route('/updateBuildingParam', methods=['POST'])
+@building.route('/updateBuildingParam/<building_id: int>', methods=['POST'])
 @login_required
-def update_building_parameter():
-    pass
+def update_building_parameter(building_id: int):
+    current_user_id = current_user.get_id()
+
+    if not Admin.is_admin(current_user_id):
+        return dict(status=403, comment="User is not admin or chairman")
+    
+    if not Chairman.is_chairman(current_user_id):
+        return dict(status=403, comment="User is not admin or chairman")
+    
+    building = Building.get(id=building_id)
+    
+    building.address = request.form.get('address')
+    building.latitude = request.form.get('latitude')
+    building.longitude = request.form.get('longitude')
+    building.hotWaterPressure = request.form.get('hotWaterPressure')
+    building.coldWaterPressure = request.form.get('coldWaterPressure')
+    building.hotWaterConsumption = request.form.get('hotWaterConsumption')
+    building.coldWaterConsumption = request.form.get('coldWaterConsumption')
+    building.directFlowTemperature = request.form.get('directFlowTemperature')
+    building.returnFlowTemperature = request.form.get('returnFlowTemperature')
+    building.inputVoltage = request.form.get('inputVoltage')
+    building.inputCurrentStrength = request.form.get('inputCurrentStrength')
+    building.redactedBy = current_user_id
+
+    building.update()
+
+    return dict(status=200, comment="Successfully updated")
