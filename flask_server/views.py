@@ -93,7 +93,7 @@ def show_profile():
     return user.serialize()
 
 
-@user.route('/addAdmin/<int:user_id>', methods=['POST'])
+@user.route('/addAdmin/<int:user_id>', methods=['PATCH'])
 @login_required
 def add_admin(user_id: int):
     current_user_id = current_user.get_id()
@@ -109,13 +109,12 @@ def add_admin(user_id: int):
     return dict(status=200, comment="Admin successfully added")
 
 
-@user.route('/addChairman/<int:user_id>', methods=['POST'])
+@user.route('/addChairman/<int:user_id>', methods=['PATCH'])
 @login_required
 def add_chairman(user_id: int):
     current_user_id = current_user.get_id()
-    current_user = User.get(id=current_user_id)
 
-    if not current_user.is_admin():
+    if not User.is_admin(current_user_id):
         return dict(status=403, comment="User is not admin")
     
     user = User.get(id=user_id)
@@ -129,12 +128,13 @@ def add_chairman(user_id: int):
 @login_required
 def show_all_users():
     current_user_id = current_user.get_id()
-    current_user = User.get(id=current_user_id)
 
-    if not current_user.is_admin():
+    if not User.is_admin(current_user_id):
         return dict(status=403, comment="User is not admin")
     
-    return User.serialize_list()
+    users = User.get_all()
+    
+    return User.serialize_list(list=users)
 
 
 @building.route('/addBuilding', methods=['POST'])
@@ -142,11 +142,9 @@ def show_all_users():
 def add_building():
     current_user_id = current_user.get_id()
 
-    if not User.is_admin(current_user_id):
+    if not User.is_admin(current_user_id) and not User.is_chairman(current_user_id):
         return dict(status=403, comment="User is not admin or chairman")
     
-    if not User.is_chairman(current_user_id):
-        return dict(status=403, comment="User is not admin or chairman")
     
     address = request.form.get('address')
     latitude = request.form.get('latitude')

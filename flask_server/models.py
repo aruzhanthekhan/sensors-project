@@ -38,7 +38,7 @@ class BaseClass(object):
         return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
     
 
-    def serialize_list(self, list):
+    def serialize_list(list):
         return [m.serialize() for m in list]
     
 
@@ -54,7 +54,7 @@ class User(db.Model, BaseClass, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.Enum(Roles), nullable=False, default=Roles.User)
     dateOfCreate = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now)
+    dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.current_timestamp())
 
 
     def __init__(self, **kwargs):
@@ -106,10 +106,10 @@ class Building(db.Model, BaseClass):
     returnFlowTemperature = db.Column(db.Float, nullable=False, default=0.0, index=True)
     inputVoltage = db.Column(db.Float, nullable=False, default=0.0, index=True)
     inputCurrentStrength = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    createdBy = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    redactedBy = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    createdBy = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, default=1)
+    redactedBy = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, default=1, onupdate=1)
     dateOfCreate = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.current_timestamp())
 
 
     def __init__(self, **kwargs):
