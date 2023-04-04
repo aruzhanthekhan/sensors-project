@@ -1,6 +1,7 @@
 from flask import Blueprint, request, session
 from flask_bcrypt import Bcrypt
 from flask_session import Session
+import jsonpickle
 
 from models import User, Admin, Chairman, Building
 
@@ -15,7 +16,9 @@ auth = Blueprint('auth', __name__)
 
 @home_page.route('/', methods=['GET'])
 def home():
-    return Building.get_all().serialize_list()
+    # return Building.get_all().serialize_list()
+    frozen = jsonpickle.encode(Building.get_all())
+    return frozen
 
 
 @auth.route('/login', methods=['POST'])
@@ -38,13 +41,25 @@ def sign_in():
 
 @auth.route('/register', methods=['POST'])
 def sign_up():
-    firstname = request.form.get('first-name')
-    lastname = request.form.get('last-name')
-    patronymic = request.form.get('fathers-name')
-    phone = request.form.get('phone')
-    email = request.form.get('email')
-    password = request.form.get('password')
 
+    print(request.json)
+    # firstname = request.json('first_name')
+    # lastname = request.json('last_name')
+    # patronymic = request.json('fathers_name')
+    # phone = request.json('phone')
+    # email = request.json('email')
+    # password = request.json('password')
+
+    firstname = request.json['first_name']
+    lastname = request.json['last_name']
+    patronymic = request.json['fathers_name']
+    phone = request.json['phone']
+    email = request.json['email']
+    password = request.json['password']
+    
+    # if not firstname:
+    # # Handle empty password
+    #     return "Please enter a valid name"
 
     userExist = User.get(email=email)
     if userExist is not None:

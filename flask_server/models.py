@@ -40,7 +40,7 @@ class User(db.Model, BaseClass):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(255), nullable=False)
     lastname = db.Column(db.String(255), nullable=False)
-    patronymic = db.Column(db.String(255), nullable=False, default="Don't have")
+    patronymic = db.Column(db.String(255), nullable=True)
     phone = db.Column(db.String(255), unique=True, nullable=True, index=True)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255), nullable=False)
@@ -102,27 +102,27 @@ class Building(db.Model, BaseClass):
 
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(255), unique=True, nullable=False)
-    latitude = db.Column(db.Numeric(precision=7, asdecimal=False, decimal_return_scale=None), unique=True, nullable=False)
-    longitude = db.Column(db.Numeric(precision=7, asdecimal=False, decimal_return_scale=None), unique=True, nullable=False)
-    hotWaterPressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    coldWaterPressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    hotWaterConsumption = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    coldWaterConsumption = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    directFlowTemperature = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    returnFlowTemperature = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    inputVoltage = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    inputCurrentStrength = db.Column(db.Float, nullable=False, default=0.0, index=True)
-    createdBy = db.Column(db.Integer, db.ForeignKey('admins.id'), nullable=False)
-    redactedBy = db.Column(db.Integer, db.ForeignKey('chairmen.id'), nullable=False)
-    dateOfCreate = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    dateOfLastUpdate = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    latitude = db.Column(db.Numeric(precision=9, scale=7, asdecimal=False, decimal_return_scale=None), unique=True, nullable=False)
+    longitude = db.Column(db.Numeric(precision=10, scale=7, asdecimal=False, decimal_return_scale=None), unique=True, nullable=False)
+    hot_water_pressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    cold_water_pressure = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    hot_water_consumption = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    cold_water_consumption = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    direct_flow_temperature = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    return_flow_temperature = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    input_voltage = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    input_current_strength = db.Column(db.Float, nullable=False, default=0.0, index=True)
+    created_by = db.Column(db.Integer, db.ForeignKey('admins.id'), nullable=False)
+    redacted_by = db.Column(db.Integer, db.ForeignKey('chairmen.id'), nullable=False)
+    date_of_create = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    date_of_last_update = db.Column(db.TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
 
 
     def __init__(self, **kwargs):
-        keys = ['id', 'address', 'latitude', 'longitude', 'hotWaterPressure', 'coldWaterPressure',
-                'hotWaterConsumption', 'coldWaterConsumption', 'directFlowTemperature',
-                'returnFlowTemperature', 'inputVoltage', 'inputCurrentStrength']
+        keys = ['id', 'address', 'latitude', 'longitude', 'hot_water_pressure', 'cold_water_pressure',
+                'hot_water_consumption', 'cold_water_consumption', 'direct_flow_temperature',
+                'return_flow_temperature', 'input_voltage', 'input_current_strength']
         
         for key in keys:
             setattr(self, key, kwargs.get(key))

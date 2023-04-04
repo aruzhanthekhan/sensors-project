@@ -11,7 +11,7 @@ export function Register() {
                     <label htmlFor="last-name">Фамилия *</label><input type="text" id="last-name" name="last-name" required />
                     <label htmlFor="first-name">Имя *</label><input type="text" id="first-name" name="first-name" required />
                     <label htmlFor="fathers-name">Отчество</label><input type="text" id="fathers-name" name="fathers-name" />
-                    <label for="phone">Номер телефона</label><input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" /> 
+                    <label htmlFor="phone">Номер телефона</label><input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" /> 
                     <label htmlFor="email">Адрес электронной почты *</label><input type="email" id="email" name="email" required />
                     <label htmlFor="password">Придумайте пароль *</label><input type="password" id="password" name="password" required />
                     <button type="submit" className='registerbtn'>Зарегистрироваться</button>
