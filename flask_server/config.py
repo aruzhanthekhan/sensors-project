@@ -19,6 +19,7 @@ class Config:
     SECRET_KEY = getenv('SECRET_KEY')
     SESSION_PERMANENT = False
     SESSION_TYPE = 'filesystem'
+    SESSION_FILE_DIR = '/flask_session/'
 
 # engine = create_engine(SQLALCHEMY_DB_URI, future=True, pool_pre_ping=True)
 # Base = declarative_base()
