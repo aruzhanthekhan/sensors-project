@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_session import Session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from models import User, Building, Roles
+from models import User, Building, Roles, buildings_schema
 
 
 bcrypt = Bcrypt()
@@ -20,7 +20,7 @@ building = Blueprint('build', __name__)
 
 @home_page.route('/', methods=['GET'])
 def home():
-    return json.dumps(Building.get_all())
+    return buildings_schema.dump(Building.get_all())
 
 
 @login_manager.user_loader

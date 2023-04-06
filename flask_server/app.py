@@ -1,9 +1,10 @@
 from flask import Flask
+from flask_cors import CORS
 # from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
 from views import home_page, auth, user, building
-from models import db, migrate
+from models import db, migrate, ma
 from views import bcrypt, server_session, login_manager
 
 app = Flask(__name__)
@@ -16,6 +17,14 @@ migrate.init_app(app, db)
 bcrypt.init_app(app)
 server_session.init_app(app)
 login_manager.init_app(app)
+ma.init_app(app)
+
+CORS(app)
+cors = CORS(app, resource={
+    r"/*":{
+        "origins":"*"
+    }
+})
 
 
 with app.app_context():

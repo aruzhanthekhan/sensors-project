@@ -4,10 +4,12 @@ from sqlalchemy.inspection import inspect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import UserMixin
+from flask_marshmallow import Marshmallow
 
 
 db = SQLAlchemy()
 migrate = Migrate()
+ma = Marshmallow()
 
 
 class Roles(int, enum.Enum):
@@ -129,6 +131,17 @@ class Building(db.Model, BaseClass):
     @staticmethod
     def get_all():
         return Building.query.filter_by().all()
+
+
+class BuildingSchema(ma.Schema):
+    class Meta:
+        # Fields to expose
+        fields = ('id', 'address', 'latitude', 'longitude', 'hot_water_pressure', 'cold_water_pressure',
+                'hot_water_consumption', 'cold_water_consumption', 'direct_flow_temperature',
+                'return_flow_temperature', 'input_voltage', 'input_current_strength')
+    
+building_schema = BuildingSchema
+buildings_schema = BuildingSchema(many=True)
 
 
 # chairmenBuildings = db.Table('chairmenbuildings',
