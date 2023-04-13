@@ -6,11 +6,9 @@ from flask_migrate import Migrate
 from flask_login import UserMixin
 from flask_marshmallow import Marshmallow
 
-
 db = SQLAlchemy()
 migrate = Migrate()
 ma = Marshmallow()
-
 
 class Roles(int, enum.Enum):
     User = 0

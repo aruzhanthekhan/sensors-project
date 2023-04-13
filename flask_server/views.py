@@ -3,14 +3,11 @@ from flask import Blueprint, request, session
 from flask_bcrypt import Bcrypt
 from flask_session import Session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-
 from models import User, Building, Roles, buildings_schema
-
 
 bcrypt = Bcrypt()
 server_session = Session()
 login_manager = LoginManager()
-
 
 home_page = Blueprint('home', __name__)
 auth = Blueprint('auth', __name__)
@@ -51,25 +48,13 @@ def sign_in():
 
 @auth.route('/register', methods=['POST'])
 def sign_up():
-
-    print(request.json)
-    # firstname = request.json('first_name')
-    # lastname = request.json('last_name')
-    # patronymic = request.json('fathers_name')
-    # phone = request.json('phone')
-    # email = request.json('email')
-    # password = request.json('password')
-
-    firstname = request.json['first_name']
-    lastname = request.json['last_name']
-    patronymic = request.json['fathers_name']
+    firstname = request.json['firstname']
+    lastname = request.json['lastname']
+    patronymic = request.json['fathersname']
     phone = request.json['phone']
     email = request.json['email']
     password = request.json['password']
     
-    # if not firstname:
-    # # Handle empty password
-    #     return "Please enter a valid name"
 
     userExist = User.get(email=email)
     if userExist is not None:

@@ -99,7 +99,7 @@ ul {
   margin: 30px 0;
 }
 
-input[type=text], input[type=password], input[type=email] {
+input[type=text], input[type=password], input[type=email], input[type=tel] {
   width: 100%;
   padding: 10px;
   margin: 5px 0 22px 0;
@@ -108,7 +108,7 @@ input[type=text], input[type=password], input[type=email] {
   background: #f1f1f1;
 }
 
-input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=tel]:focus {
   background-color: #ddd;
   outline: none;
 }
@@ -155,4 +155,9 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
 
 .centered-header {
   text-align: center;
+}
+
+.navbar-element {
+  display: flex;
+  justify-content: space-between;
 }
