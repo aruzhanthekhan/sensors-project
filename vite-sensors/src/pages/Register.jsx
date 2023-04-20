@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import { useState } from "react"
 
 export function Register() {
-    const [lastname, setLastname] = useState();
-    const [firstname, setFirstname] = useState();
-    const [fathersname, setFathersname] = useState("");
-    const [phone, setPhone] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [lastname, setLastname] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [fathersname, setFathersname] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();

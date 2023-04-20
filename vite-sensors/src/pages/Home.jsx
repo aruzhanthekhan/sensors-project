@@ -33,7 +33,7 @@ function Map() {
       {markers.map((marker) => (
         <Marker position={[marker.latitude, marker.longitude]} icon={customIcon} key={marker.id}>
           <Popup>
-            <Link to="/indicators">{marker.address}</Link>
+            <Link to="/indicators" state={marker}>{marker.address}</Link>
           </Popup>
         </Marker>
       ))}
@@ -60,8 +60,6 @@ export function Home() {
           <div className='team-section'>
           <h1> <FontAwesomeIcon icon={faUsers} />   Команда</h1>
             <Link to="/team" target="_blank" className="button-team">Узнать больше о команде</Link>
-            <br />
-            <Link to="/indicators" target="_blank" className="button-team">Показатели</Link>
           </div>
         </section>
       </main>

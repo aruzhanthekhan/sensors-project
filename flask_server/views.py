@@ -1,9 +1,12 @@
 import json
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, jsonify
 from flask_bcrypt import Bcrypt
 from flask_session import Session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models import User, Building, Roles, buildings_schema
+from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
+from datetime import datetime, timedelta, timezone
+
 
 bcrypt = Bcrypt()
 server_session = Session()
@@ -13,11 +16,42 @@ home_page = Blueprint('home', __name__)
 auth = Blueprint('auth', __name__)
 user = Blueprint('user', __name__)
 building = Blueprint('build', __name__)
+jwt = JWTManager()
 
 
 @home_page.route('/', methods=['GET'])
 def home():
     return buildings_schema.dump(Building.get_all())
+
+
+@auth.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            data = response.get_json()
+            if type(data) is dict:
+                data["access_token"] = access_token 
+                response.data = json.dumps(data)
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original respone
+        return response
+
+
+@auth.route('/token', methods=["POST"])
+def create_token():
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    if email != "test" or password != "test":
+        return {"msg": "Wrong email or password"}, 401
+
+    access_token = create_access_token(identity=email)
+    response = {"access_token":access_token}
+    return response
 
 
 @login_manager.user_loader
@@ -29,8 +63,8 @@ def load_user(user_id: int):
 def sign_in():
     session.pop('user_id', None)
 
-    email = request.form.get('email')
-    password = request.form.get('password')
+    email = request.json['email']
+    password = request.json['password']
 
     user = User.get(email=email)
 
@@ -74,20 +108,31 @@ def sign_up():
     
 
 @auth.route('/logout', methods=['POST'])
-@login_required
+# @login_required
 def logout():
-    logout_user()
-    session.pop('user_id')
-    return dict(status=200, comment="User log out")
+    # logout_user()
+    # session.pop('user_id')
+    # return dict(status=200, comment="User log out")
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response    
 
 
+# @login_required
 @user.route('/profile', methods=['GET'])
-@login_required
+@jwt_required()
 def show_profile():
-    current_user_id = current_user.get_id()
-    user = User.get(id = current_user_id)
+    # current_user_id = current_user.get_id()
+    # # current_user_id = current_user.load_user()
+    # user = User.get(id = current_user_id)
 
-    return user.serialize()
+    # return user.serialize()
+    response_body = {
+        "name": "Nagato",
+        "about" :"Hello! I'm a full stack developer that loves python and javascript"
+    }
+
+    return response_body
 
 
 @user.route('/addAdmin/<int:user_id>', methods=['PATCH'])
