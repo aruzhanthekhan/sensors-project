@@ -42,7 +42,6 @@ function Map() {
 }
 
 export function Home() {
-
   return (
     <div className="App">
       <main>
@@ -59,7 +58,7 @@ export function Home() {
           </div>
           <div className='team-section'>
           <h1> <FontAwesomeIcon icon={faUsers} />   Команда</h1>
-            <Link to="/team" target="_blank" className="button-team">Узнать больше о команде</Link>
+            <Link to="/team" className="button-team">Узнать больше о команде</Link>
           </div>
         </section>
       </main>
